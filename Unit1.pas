@@ -21,8 +21,7 @@ type
   TTokenState = (dbname, dbKey, dbValue, recKey, recValue);
 
   TRecInfo = record
-    dbname, title, name: string;
-    raw: UTF8String;
+    dbname, title, name, raw: string;
     number: integer;
     date: TDateTime;
   end;
@@ -48,15 +47,17 @@ type
     FDGUIxWaitCursor1: TFDGUIxWaitCursor;
     Button4: TButton;
     delete: TAction;
-    FDTable1raw: TBlobField;
     Panel1: TPanel;
     Memo1: TMemo;
+    FDTable1raw: TMemoField;
+    BindSourceDB1: TBindSourceDB;
+    BindingsList1: TBindingsList;
+    LinkControlToField1: TLinkControlToField;
     procedure FileOpen1Accept(Sender: TObject);
     procedure Action1Execute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure deleteExecute(Sender: TObject);
-    procedure FDTable1AfterScroll(DataSet: TDataSet);
   private
     { Private êÈåæ }
     state: TTokenState;
@@ -105,18 +106,6 @@ begin
   if MessageDlg('çÌèúÇµÇ‹Ç∑Ç™ÇÊÇÎÇµÇ¢Ç≈Ç∑Ç©', mtWarning, [mbOK, mbCancel], 0) = mrOK then
     while FDTable1.Eof = false do
       FDTable1.delete;
-end;
-
-procedure TForm1.FDTable1AfterScroll(DataSet: TDataSet);
-var
-  blob: TStream;
-begin
-  blob:=FDTable1.CreateBlobStream(FDTable1.FieldByName('raw'),bmRead);
-  try
-    Memo1.Lines.LoadFromStream(blob, TEncoding.Default);
-  finally
-    blob.Free;
-  end;
 end;
 
 procedure TForm1.FileOpen1Accept(Sender: TObject);
@@ -203,15 +192,7 @@ begin
           infoData(Copy(str, cnt, i - cnt));
           x := false;
           FDTable1.AppendRecord([info.dbname, info.number, info.title,
-            info.name, info.date, nil]);
-          FDTable1.Edit;
-          blob:=FDTable1.CreateBlobStream(FDTable1.FieldByName('raw'),bmWrite);
-          try
-            blob.WriteBuffer(info.raw,Length(info.raw));
-            FDTable1.Post;
-          finally
-            blob.Free;
-          end;
+            info.name, info.date, info.raw]);
         end;
       ']':
         state := dbname;

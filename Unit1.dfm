@@ -128,12 +128,12 @@ object Form1: TForm1
       'Database=C:\Users\yamat\Documents\GitHub\bbsbackup\bbsdata.db'
       'LockingMode=Normal'
       'DriverID=SQLite')
+    Connected = True
     LoginPrompt = False
     Left = 314
     Top = 152
   end
   object FDTable1: TFDTable
-    AfterScroll = FDTable1AfterScroll
     Connection = BbsbackupConnection
     UpdateOptions.UpdateTableName = 'bbs'
     TableName = 'bbs'
@@ -155,8 +155,9 @@ object Form1: TForm1
     object FDTable1date: TDateTimeField
       FieldName = 'date'
     end
-    object FDTable1raw: TBlobField
+    object FDTable1raw: TMemoField
       FieldName = 'raw'
+      BlobType = ftMemo
       Size = 8000
     end
   end
@@ -169,5 +170,24 @@ object Form1: TForm1
     Provider = 'Forms'
     Left = 192
     Top = 64
+  end
+  object BindSourceDB1: TBindSourceDB
+    DataSet = FDTable1
+    ScopeMappings = <>
+    Left = 312
+    Top = 152
+  end
+  object BindingsList1: TBindingsList
+    Methods = <>
+    OutputConverters = <>
+    Left = 20
+    Top = 5
+    object LinkControlToField1: TLinkControlToField
+      Category = #12463#12452#12483#12463' '#12496#12452#12531#12487#12451#12531#12464
+      DataSource = BindSourceDB1
+      FieldName = 'RAW'
+      Control = Memo1
+      Track = False
+    end
   end
 end
