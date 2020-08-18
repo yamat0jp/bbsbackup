@@ -13,7 +13,9 @@ uses
   FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt,
   FireDAC.Comp.DataSet, Vcl.Grids, Vcl.DBGrids, FireDAC.Phys.SQLite,
   FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs, FireDAC.VCLUI.Wait,
-  FireDAC.Comp.UI;
+  FireDAC.Comp.UI, Vcl.ExtCtrls, System.Rtti, System.Bindings.Outputs,
+  Vcl.Bind.Editors, Data.Bind.EngExt, Vcl.Bind.DBEngExt, Data.Bind.Components,
+  Data.Bind.DBScope;
 
 type
   TTokenState = (dbname, dbKey, dbValue, recKey, recValue);
@@ -45,11 +47,15 @@ type
     FDGUIxWaitCursor1: TFDGUIxWaitCursor;
     Button4: TButton;
     delete: TAction;
+    FDTable1raw: TBlobField;
+    Panel1: TPanel;
+    Memo1: TMemo;
     procedure FileOpen1Accept(Sender: TObject);
     procedure Action1Execute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure deleteExecute(Sender: TObject);
+    procedure FDTable1AfterScroll(DataSet: TDataSet);
   private
     { Private êÈåæ }
     state: TTokenState;
@@ -99,6 +105,18 @@ begin
       FDTable1.delete;
 end;
 
+procedure TForm1.FDTable1AfterScroll(DataSet: TDataSet);
+var
+  blob: TStream;
+begin
+  blob:=FDTable1.CreateBlobStream(FDTable1.FieldByName('raw'),bmRead);
+  try
+    Memo1.Lines.LoadFromStream(blob);
+  finally
+    blob.Free;
+  end;
+end;
+
 procedure TForm1.FileOpen1Accept(Sender: TObject);
 begin
   mem.LoadFromFile(FileOpen1.Dialog.FileName);
@@ -107,6 +125,9 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   mem := TMemoryStream.Create;
+  if FDTable1.Exists = false then
+    FDTable1.CreateTable;
+  FDTable1.Open;
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
@@ -133,6 +154,8 @@ begin
       info.title := value
     else if key = 'name' then
       info.name := value
+    else if key = 'raw' then
+      info.raw := value
     else if key = 'date' then
       info.date := StrToDateTime(value);
   end;
@@ -141,6 +164,7 @@ end;
 procedure TForm1.main(str: string);
 var
   i, cnt: integer;
+  blob: TStream;
   x: Boolean;
 begin
   if dump <> '' then
@@ -177,7 +201,15 @@ begin
           infoData(Copy(str, cnt, i - cnt));
           x := false;
           FDTable1.AppendRecord([info.dbname, info.number, info.title,
-            info.name, info.date]);
+            info.name, info.date, nil]);
+          FDTable1.Edit;
+          blob:=FDTable1.CreateBlobStream(FDTable1.FieldByName('raw'),bmWrite);
+          try
+            blob.WriteBuffer(PChar(info.raw)^,Length(info.raw)*SizeOf(Char));
+            FDTable1.Post;
+          finally
+            blob.Free;
+          end;
         end;
       ']':
         state := dbname;

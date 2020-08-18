@@ -52,21 +52,6 @@ object Form1: TForm1
     Anchors = [akTop, akRight]
     TabOrder = 3
   end
-  object DBGrid1: TDBGrid
-    Left = 0
-    Top = 0
-    Width = 457
-    Height = 280
-    Align = alLeft
-    Anchors = [akLeft, akTop, akRight, akBottom]
-    DataSource = DataSource1
-    TabOrder = 4
-    TitleFont.Charset = DEFAULT_CHARSET
-    TitleFont.Color = clWindowText
-    TitleFont.Height = -11
-    TitleFont.Name = 'Tahoma'
-    TitleFont.Style = []
-  end
   object Button4: TButton
     Left = 504
     Top = 176
@@ -74,7 +59,39 @@ object Form1: TForm1
     Height = 25
     Action = delete
     Anchors = [akTop, akRight]
+    TabOrder = 4
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 457
+    Height = 280
+    Align = alLeft
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Caption = 'Panel1'
     TabOrder = 5
+    object DBGrid1: TDBGrid
+      Left = 1
+      Top = 1
+      Width = 455
+      Height = 189
+      Align = alClient
+      DataSource = DataSource1
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+    end
+    object Memo1: TMemo
+      Left = 1
+      Top = 190
+      Width = 455
+      Height = 89
+      Align = alBottom
+      TabOrder = 1
+    end
   end
   object ActionList1: TActionList
     Left = 312
@@ -117,7 +134,7 @@ object Form1: TForm1
     Top = 152
   end
   object FDTable1: TFDTable
-    Active = True
+    AfterScroll = FDTable1AfterScroll
     Connection = BbsbackupConnection
     UpdateOptions.UpdateTableName = 'bbs'
     TableName = 'bbs'
@@ -138,6 +155,10 @@ object Form1: TForm1
     end
     object FDTable1date: TDateTimeField
       FieldName = 'date'
+    end
+    object FDTable1raw: TBlobField
+      FieldName = 'raw'
+      Size = 8000
     end
   end
   object DataSource1: TDataSource
