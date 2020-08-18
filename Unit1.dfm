@@ -128,7 +128,6 @@ object Form1: TForm1
       'Database=C:\Users\yamat\Documents\GitHub\bbsbackup\bbsdata.db'
       'LockingMode=Normal'
       'DriverID=SQLite')
-    Connected = True
     LoginPrompt = False
     Left = 314
     Top = 152

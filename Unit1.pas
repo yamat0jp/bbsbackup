@@ -21,7 +21,8 @@ type
   TTokenState = (dbname, dbKey, dbValue, recKey, recValue);
 
   TRecInfo = record
-    dbname, title, name, raw: string;
+    dbname, title, name: string;
+    raw: UTF8String;
     number: integer;
     date: TDateTime;
   end;
@@ -75,12 +76,13 @@ implementation
 
 {$R *.dfm}
 
+uses System.UITypes;
+
 procedure TForm1.Action1Execute(Sender: TObject);
 const
   a = 800 * 2;
 var
   i, j: integer;
-  c: Char;
   str: string;
   buf: TArray<Char>;
 begin
@@ -111,7 +113,7 @@ var
 begin
   blob:=FDTable1.CreateBlobStream(FDTable1.FieldByName('raw'),bmRead);
   try
-    Memo1.Lines.LoadFromStream(blob);
+    Memo1.Lines.LoadFromStream(blob, TEncoding.Default);
   finally
     blob.Free;
   end;
@@ -205,7 +207,7 @@ begin
           FDTable1.Edit;
           blob:=FDTable1.CreateBlobStream(FDTable1.FieldByName('raw'),bmWrite);
           try
-            blob.WriteBuffer(PChar(info.raw)^,Length(info.raw)*SizeOf(Char));
+            blob.WriteBuffer(info.raw,Length(info.raw));
             FDTable1.Post;
           finally
             blob.Free;
