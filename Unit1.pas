@@ -146,7 +146,7 @@ begin
     else if key = 'name' then
       info.name := value
     else if key = 'raw' then
-      info.raw := value
+      info.raw := StringReplace(value,'\r\n',#13#10,[rfReplaceAll,rfIgnoreCase])
     else if key = 'date' then
       info.date := StrToDateTime(value);
   end;

@@ -91,6 +91,8 @@ object Form1: TForm1
       Height = 89
       Align = alBottom
       TabOrder = 1
+      ExplicitLeft = 0
+      ExplicitTop = 185
     end
   end
   object ActionList1: TActionList
@@ -125,10 +127,9 @@ object Form1: TForm1
   end
   object BbsbackupConnection: TFDConnection
     Params.Strings = (
-      'Database=C:\Users\yamat\Documents\GitHub\bbsbackup\bbsdata.db'
       'LockingMode=Normal'
+      'Database=bbsdata.db'
       'DriverID=SQLite')
-    Connected = True
     LoginPrompt = False
     Left = 314
     Top = 152
@@ -158,7 +159,6 @@ object Form1: TForm1
     object FDTable1raw: TMemoField
       FieldName = 'raw'
       BlobType = ftMemo
-      Size = 8000
     end
   end
   object DataSource1: TDataSource
@@ -175,7 +175,7 @@ object Form1: TForm1
     DataSet = FDTable1
     ScopeMappings = <>
     Left = 312
-    Top = 152
+    Top = 224
   end
   object BindingsList1: TBindingsList
     Methods = <>
