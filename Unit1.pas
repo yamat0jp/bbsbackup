@@ -39,20 +39,21 @@ type
     FDTable1: TFDTable;
     DBGrid1: TDBGrid;
     DataSource1: TDataSource;
-    FDTable1dbname: TStringField;
-    FDTable1number: TIntegerField;
-    FDTable1title: TStringField;
-    FDTable1name: TStringField;
-    FDTable1date: TDateTimeField;
     FDGUIxWaitCursor1: TFDGUIxWaitCursor;
     Button4: TButton;
     delete: TAction;
     Panel1: TPanel;
     Memo1: TMemo;
-    FDTable1raw: TMemoField;
+    Label1: TLabel;
+    FDTable1number: TIntegerField;
+    FDTable1date: TDateTimeField;
     BindSourceDB1: TBindSourceDB;
     BindingsList1: TBindingsList;
     LinkControlToField1: TLinkControlToField;
+    FDTable1raw: TWideStringField;
+    FDTable1dbname: TWideStringField;
+    FDTable1title: TWideStringField;
+    FDTable1name: TWideStringField;
     procedure FileOpen1Accept(Sender: TObject);
     procedure Action1Execute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -99,6 +100,7 @@ begin
     main(str);
   end;
   Finalize(buf);
+  Label1.Caption:=IntToStr(FDTable1.RecordCount);
 end;
 
 procedure TForm1.deleteExecute(Sender: TObject);
@@ -106,6 +108,7 @@ begin
   if MessageDlg('çÌèúÇµÇ‹Ç∑Ç™ÇÊÇÎÇµÇ¢Ç≈Ç∑Ç©', mtWarning, [mbOK, mbCancel], 0) = mrOK then
     while FDTable1.Eof = false do
       FDTable1.delete;
+  Label1.Caption:=IntToStr(FDTable1.RecordCount);
 end;
 
 procedure TForm1.FileOpen1Accept(Sender: TObject);

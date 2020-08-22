@@ -18,6 +18,13 @@ object Form1: TForm1
     299)
   PixelsPerInch = 96
   TextHeight = 13
+  object Label1: TLabel
+    Left = 490
+    Top = 224
+    Width = 31
+    Height = 13
+    Caption = 'Label1'
+  end
   object Button1: TButton
     Left = 504
     Top = 32
@@ -91,8 +98,6 @@ object Form1: TForm1
       Height = 89
       Align = alBottom
       TabOrder = 1
-      ExplicitLeft = 0
-      ExplicitTop = 185
     end
   end
   object ActionList1: TActionList
@@ -128,11 +133,12 @@ object Form1: TForm1
   object BbsbackupConnection: TFDConnection
     Params.Strings = (
       'LockingMode=Normal'
-      'Database=bbsdata.db'
+      'Database=bbsdata.sdb'
+      'DateTimeFormat=DateTime'
       'DriverID=SQLite')
     LoginPrompt = False
-    Left = 314
-    Top = 152
+    Left = 312
+    Top = 216
   end
   object FDTable1: TFDTable
     Connection = BbsbackupConnection
@@ -140,25 +146,25 @@ object Form1: TForm1
     TableName = 'bbs'
     Left = 120
     Top = 152
-    object FDTable1dbname: TStringField
+    object FDTable1dbname: TWideStringField
       FieldName = 'dbname'
     end
     object FDTable1number: TIntegerField
       FieldName = 'number'
     end
-    object FDTable1title: TStringField
+    object FDTable1title: TWideStringField
       FieldName = 'title'
       Size = 80
     end
-    object FDTable1name: TStringField
+    object FDTable1name: TWideStringField
       FieldName = 'name'
     end
     object FDTable1date: TDateTimeField
       FieldName = 'date'
     end
-    object FDTable1raw: TMemoField
+    object FDTable1raw: TWideStringField
       FieldName = 'raw'
-      BlobType = ftMemo
+      Size = 1500
     end
   end
   object DataSource1: TDataSource
@@ -174,8 +180,8 @@ object Form1: TForm1
   object BindSourceDB1: TBindSourceDB
     DataSet = FDTable1
     ScopeMappings = <>
-    Left = 312
-    Top = 224
+    Left = 368
+    Top = 152
   end
   object BindingsList1: TBindingsList
     Methods = <>
@@ -185,7 +191,7 @@ object Form1: TForm1
     object LinkControlToField1: TLinkControlToField
       Category = #12463#12452#12483#12463' '#12496#12452#12531#12487#12451#12531#12464
       DataSource = BindSourceDB1
-      FieldName = 'RAW'
+      FieldName = 'raw'
       Control = Memo1
       Track = False
     end
