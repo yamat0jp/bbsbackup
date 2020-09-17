@@ -44,7 +44,6 @@ type
     delete: TAction;
     Panel1: TPanel;
     Memo1: TMemo;
-    Label1: TLabel;
     FDTable1number: TIntegerField;
     FDTable1date: TDateTimeField;
     BindSourceDB1: TBindSourceDB;
@@ -103,13 +102,13 @@ begin
     main(Copy(str, 1, i div SizeOf(Char)));
   end;
   Finalize(buf);
-  Label1.Caption := countRec;
+  StatusBar1.Panels[1].Text := countRec;
 end;
 
 function TForm1.countRec: string;
 begin
   FDTable1.Last;
-  result := IntToStr(FDTable1.RecordCount);
+  result := 'RecordCount : ' + IntToStr(FDTable1.RecordCount);
 end;
 
 procedure TForm1.deleteExecute(Sender: TObject);
@@ -117,12 +116,17 @@ begin
   if MessageDlg('çÌèúÇµÇ‹Ç∑Ç™ÇÊÇÎÇµÇ¢Ç≈Ç∑Ç©', mtWarning, [mbOK, mbCancel], 0) = mrOK then
     while FDTable1.Eof = false do
       FDTable1.delete;
-  Label1.Caption := countRec;
+  StatusBar1.Panels[2].Text := countRec;
 end;
 
 procedure TForm1.FileOpen1Accept(Sender: TObject);
+var
+  s: string;
 begin
-  mem.LoadFromFile(FileOpen1.Dialog.FileName);
+  s := FileOpen1.Dialog.FileName;
+  mem.LoadFromFile(s);
+  StatusBar1.Panels[0].Text := s;
+  StatusBar1.Hint:=s;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -131,7 +135,7 @@ begin
   if FDTable1.Exists = false then
     FDTable1.CreateTable;
   FDTable1.Open;
-  Label1.Caption := countRec;
+  StatusBar1.Panels[1].Text := countRec;
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);

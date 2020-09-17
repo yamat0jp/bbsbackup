@@ -18,13 +18,6 @@ object Form1: TForm1
     299)
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 490
-    Top = 224
-    Width = 31
-    Height = 13
-    Caption = 'Label1'
-  end
   object Button1: TButton
     Left = 504
     Top = 32
@@ -39,7 +32,17 @@ object Form1: TForm1
     Top = 280
     Width = 635
     Height = 19
-    Panels = <>
+    Panels = <
+      item
+        Text = 'TargetFile : '
+        Width = 450
+      end
+      item
+        Text = 'RecordCount : 0'
+        Width = 50
+      end>
+    ParentShowHint = False
+    ShowHint = True
   end
   object Button2: TButton
     Left = 504
