@@ -66,6 +66,7 @@ type
     dump: string;
     procedure main(str: string);
     procedure infoData(str: string);
+    function countRec: string;
   public
     { Public êÈåæ }
     mem: TMemoryStream;
@@ -92,17 +93,23 @@ begin
   SetLength(buf, a);
   mem.Position := 0;
   state := dbname;
-  enc:=nil;
+  enc := nil;
   while mem.Position < mem.size - 1 do
   begin
     i := mem.Read(Pointer(buf)^, a);
     if enc = nil then
-      enc.GetBufferEncoding(mem.Memory,enc);
-    str := PCHar(enc.Convert(enc,TEncoding.Unicode,buf));
-    main(Copy(str,1,i div SizeOf(Char)));
+      enc.GetBufferEncoding(mem.Memory, enc);
+    str := PChar(enc.Convert(enc, TEncoding.Unicode, buf));
+    main(Copy(str, 1, i div SizeOf(Char)));
   end;
   Finalize(buf);
-  Label1.Caption:=IntToStr(FDTable1.RecordCount);
+  Label1.Caption := countRec;
+end;
+
+function TForm1.countRec: string;
+begin
+  FDTable1.Last;
+  result := IntToStr(FDTable1.RecordCount);
 end;
 
 procedure TForm1.deleteExecute(Sender: TObject);
@@ -110,7 +117,7 @@ begin
   if MessageDlg('çÌèúÇµÇ‹Ç∑Ç™ÇÊÇÎÇµÇ¢Ç≈Ç∑Ç©', mtWarning, [mbOK, mbCancel], 0) = mrOK then
     while FDTable1.Eof = false do
       FDTable1.delete;
-  Label1.Caption:=IntToStr(FDTable1.RecordCount);
+  Label1.Caption := countRec;
 end;
 
 procedure TForm1.FileOpen1Accept(Sender: TObject);
@@ -124,6 +131,7 @@ begin
   if FDTable1.Exists = false then
     FDTable1.CreateTable;
   FDTable1.Open;
+  Label1.Caption := countRec;
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
@@ -151,7 +159,8 @@ begin
     else if key = 'name' then
       info.name := value
     else if key = 'raw' then
-      info.raw := StringReplace(value,'\r\n',#13#10,[rfReplaceAll,rfIgnoreCase])
+      info.raw := StringReplace(value, '\r\n', #13#10,
+        [rfReplaceAll, rfIgnoreCase])
     else if key = 'date' then
       info.date := StrToDateTime(value);
   end;
