@@ -63,7 +63,6 @@ type
     { Private êÈåæ }
     state: TTokenState;
     info: TRecInfo;
-    enc: TEncoding;
     dump: string;
     procedure main(str: string);
     procedure infoData(str: string);
@@ -86,21 +85,21 @@ const
   a = 800 * 2;
 var
   i, j: integer;
-  str: string;
   buf: TBytes;
-  temp: TArray<Char>;
+  str: PChar;
+  enc: TEncoding;
 begin
   SetLength(buf, a);
   mem.Position := 0;
   state := dbname;
+  enc:=nil;
   while mem.Position < mem.size - 1 do
   begin
     i := mem.Read(Pointer(buf)^, a);
-    temp := TArray<Char>(enc.Convert(enc,TEncoding.Unicode,buf));
-    str := '';
-    for j := 0 to i div SizeOf(Char) - 1 do
-      str := str + temp[j];
-    main(str);
+    if enc = nil then
+      enc.GetBufferEncoding(mem.Memory,enc);
+    str := PCHar(enc.Convert(enc,TEncoding.Unicode,buf));
+    main(Copy(str,1,i div SizeOf(Char)));
   end;
   Finalize(buf);
   Label1.Caption:=IntToStr(FDTable1.RecordCount);
@@ -117,8 +116,6 @@ end;
 procedure TForm1.FileOpen1Accept(Sender: TObject);
 begin
   mem.LoadFromFile(FileOpen1.Dialog.FileName);
-  enc:=nil;
-  enc.GetBufferEncoding(mem.Memory,enc);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
