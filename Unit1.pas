@@ -63,6 +63,7 @@ type
     { Private êÈåæ }
     state: TTokenState;
     info: TRecInfo;
+    enc: TEncoding;
     dump: string;
     procedure main(str: string);
     procedure infoData(str: string);
@@ -86,7 +87,8 @@ const
 var
   i, j: integer;
   str: string;
-  buf: TArray<Char>;
+  buf: TBytes;
+  temp: TArray<Char>;
 begin
   SetLength(buf, a);
   mem.Position := 0;
@@ -94,9 +96,10 @@ begin
   while mem.Position < mem.size - 1 do
   begin
     i := mem.Read(Pointer(buf)^, a);
+    temp := TArray<Char>(enc.Convert(enc,TEncoding.Unicode,buf));
     str := '';
     for j := 0 to i div SizeOf(Char) - 1 do
-      str := str + buf[j];
+      str := str + temp[j];
     main(str);
   end;
   Finalize(buf);
@@ -114,6 +117,8 @@ end;
 procedure TForm1.FileOpen1Accept(Sender: TObject);
 begin
   mem.LoadFromFile(FileOpen1.Dialog.FileName);
+  enc:=nil;
+  enc.GetBufferEncoding(mem.Memory,enc);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
